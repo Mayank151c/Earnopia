@@ -1,0 +1,34 @@
+.App {
+  text-align: center;
+  background: white;
+  padding: 1rem;
+}
+
+#header {
+  img {
+    width: 1.75rem;
+    height: 2.25rem;
+  }
+}
+
+#title {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+#balance {
+  letter-spacing: 0.25rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+#tasks {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  gap: 0.8rem;
+}

@@ -1,0 +1,10 @@
+#task {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  gap: 1.5rem;
+  padding: 0.7rem; 
+  align-items: center; 
+  border-radius: 1rem; 
+  background-color: rgb(136, 43, 11, 0.5); 
+  height: 3rem;
+}
