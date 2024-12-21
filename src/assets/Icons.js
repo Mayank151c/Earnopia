@@ -1,23 +1,25 @@
 import {
-  DirectionsRun,
   Add,
   Close,
   Cancel,
+  DirectionsRun,
+  DirectionsWalk,
   Explore,
   ElectricBike,
-  DirectionsWalk,
-  ElectricBikeSharp
+  ElectricBikeSharp,
+  Remove,
+  SelfImprovement,
 } from '@mui/icons-material';
 
 const Icons = [
   Add,
-  DirectionsRun,
   Close,
   Cancel,
+  DirectionsRun,
   Explore,
   ElectricBike,
-  DirectionsWalk,
-  ElectricBikeSharp
+  Remove,
+  SelfImprovement,
 ];
 
 export default Icons;
