@@ -11,7 +11,7 @@ const totalTasks = [
   {Icon: Add, count: 0, desc: 'Add a task', points: 100},
   {Icon: Add, count: 0, desc: 'Add a task', points: 100},
   {Icon: Add, count: 0, desc: 'Add a task', points: 100},
-  {Icon: Add, count: 0, desc: 'FAP', points: 5000},
+  {Icon: Add, count: 0, desc: 'Add a task', points: 5000},
 ];
 
 function App() {

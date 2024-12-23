@@ -1,25 +1,13 @@
-import {
-  Add,
-  Close,
-  Cancel,
-  DirectionsRun,
-  DirectionsWalk,
-  Explore,
-  ElectricBike,
-  ElectricBikeSharp,
-  Remove,
-  SelfImprovement,
-} from '@mui/icons-material';
+import * as MuiIcons from '@mui/icons-material';
 
 const Icons = [
-  Add,
-  Close,
-  Cancel,
-  DirectionsRun,
-  Explore,
-  ElectricBike,
-  Remove,
-  SelfImprovement,
+  MuiIcons.Add,
+  MuiIcons.Code,
+  MuiIcons.DirectionsRun,
+  MuiIcons.Explore,
+  MuiIcons.ElectricBike,
+  MuiIcons.Remove,
+  MuiIcons.SelfImprovement,
 ];
 
 export default Icons;

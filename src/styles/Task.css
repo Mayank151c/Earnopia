@@ -39,17 +39,26 @@
 }
 
 #count {
-  font-size: 1rem;
-  height: 1.5rem;
-  width: 2.5rem;
-  text-align: center;
+  font-size: 1.2rem;
+  height: 2rem;
+  width: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-right: 1rem;
-  margin-bottom: 0.35rem;
-  border: 1px dashed black;
-  border-radius: 10%;
+  border: 1px dashed rgba(0,0,0,0.25);
 }
 
 .editable {
   background: rgb(136, 43, 11, 0.25);
-  border: 2px solid black;
+  border: 2px solid red;
+  border-bottom: 2px solid red;
+}
+
+.action-btn {
+  color: green;
+  cursor: pointer;
+  padding: 0.35rem;
+  border: 1px solid black;
+  border-radius: 30% 0% 30% 0;
 }
