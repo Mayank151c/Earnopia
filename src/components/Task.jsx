@@ -61,7 +61,7 @@ function Task(props) {
   return (
     <div id='task' className={state.isEditable ? 'editable' : ''}>
       <Dialog title='Select Icon' open={state.isIconsDialogOpen}>
-        {Icons.map((Icon, i) => <Icon key={i} id={i} onClick={closeIconsDialog} />)}
+        {Icons.slice(1).map((Icon, i) => <Icon key={i} id={i+1} onClick={closeIconsDialog} />)}
       </Dialog>
       <TaskIcon className='icon' onClick={openIconsDialog} />
       <div type='text' className='desc'>
