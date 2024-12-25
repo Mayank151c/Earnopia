@@ -10,6 +10,7 @@ const Icons = [
   MuiIcons.FitnessCenter,
   MuiIcons.LocalDrinkOutlined,
   MuiIcons.LocalGroceryStoreOutlined,
+  MuiIcons.Shower,
   MuiIcons.HotelOutlined,
   MuiIcons.ExploreOutlined,
 ];

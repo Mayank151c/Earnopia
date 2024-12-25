@@ -1,0 +1,24 @@
+#header {
+  img {
+    width: 1.75rem;
+    height: 2.25rem;
+  }
+  .title {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .balance {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 0.1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    /* Bitcoin Icon */
+    svg {
+      font-size: 2rem;
+      color: goldenrod;
+    }
+  }
+}

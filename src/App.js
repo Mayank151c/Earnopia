@@ -1,10 +1,9 @@
 import React from 'react';
 import './App.css';
-import ico from './favicon.ico';
 import Task from './components/Task'; 
 import UpdateLocalStorage from './components/UpdateLocalStorage';
 import Button from '@mui/material/Button';
-import * as MuiIcons from '@mui/icons-material';
+import Header from './components/Header';
 
 const totalTasks = [
   { count: 0, desc: 'Excerise', points: 500},
@@ -31,6 +30,7 @@ function App() {
     } else {
       setCoin(Number(localStorage.getItem('coin')));
     }
+    // eslint-disable-next-line
   }, []);
 
   const updateCoin = (points) => {
@@ -49,16 +49,7 @@ function App() {
 
   return (
     <div className='App'>
-
-      <div id='header'>
-        <img src={ico} alt='logo' />
-        <div className='title'>Earnopia</div>
-        <div className='balance'>
-          <MuiIcons.CurrencyBitcoinOutlined />
-          {String(coin).padStart(10, '0')}
-        </div>
-      </div>
-
+      <Header coin={coin}/>
 
       <div id='body'>
         <div>Total Tasks</div>
