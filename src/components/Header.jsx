@@ -5,10 +5,10 @@ import { CurrencyBitcoinOutlined } from '@mui/icons-material';
 
 function Header(props) {
   return (
-    <div id='header'>
-      <img src={favicon} alt='logo' />
-      <div className='title'>Earnopia</div>
-      <div className='balance'>
+    <div id="header">
+      <img src={favicon} alt="logo" />
+      <div className="title">Earnopia</div>
+      <div className="balance">
         <CurrencyBitcoinOutlined />
         {String(props.coin).padStart(10, '0')}
       </div>
