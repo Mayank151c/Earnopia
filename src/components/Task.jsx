@@ -1,62 +1,73 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import '../styles/Task.css';
 import Dialog from './Dialog';
 import Icons from '../assets/Icons';
 import * as MuiIcons from '@mui/icons-material';
 
+// Reducer function
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'toggleEditable':
+      return { ...state, isEditable: !state.isEditable };
+    case 'setPoints':
+      return { ...state, points: action.payload };
+    case 'setDesc':
+      return { ...state, desc: action.payload };
+    case 'setIconIndex':
+      return { ...state, iconIndex: action.payload };
+    case 'toggleDialog':
+      return { ...state, isIconsDialogOpen: action.payload };
+    case 'setCount':
+      return { ...state, count: action.payload };
+    default:
+      return state;
+  }
+};
+
+// Lazy initialization function
+const init = (props) => {
+  const savedState = localStorage.getItem(`task${props.id}`);
+  return savedState
+    ? JSON.parse(savedState)
+    : {
+        desc: props.data.desc,
+        count: props.data.count,
+        points: props.data.points,
+        isIconsDialogOpen: false,
+        isEditable: false,
+        iconIndex: 0,
+      };
+};
+
 function Task(props) {
-  const [state, setState] = React.useState(() => {
-    const savedState = localStorage.getItem(`task${props.id}`);
-    return savedState
-      ? JSON.parse(savedState)
-      : {
-          desc: props.data.desc,
-          count: props.data.count,
-          points: props.data.points,
-          isIconsDialogOpen: false,
-          isEditable: false,
-          iconIndex: 0,
-        };
-  });
+  const [state, dispatch] = useReducer(reducer, props, init);
   const TaskIcon = Icons[state.iconIndex] || Icons[0];
 
   useEffect(() => {
     localStorage.setItem(`task${props.id}`, JSON.stringify(state));
   }, [props.id, state]);
 
-  const updateState = (key, value) => {
-    setState((prev) => ({ ...prev, [key]: value }));
+  const setState = (type, payload) => {
+    dispatch({ type, payload });
   };
 
-  const toggleEditable = (e) => {
-    updateState('isEditable', !state.isEditable);
-  };
-
-  const handleSetPoints = (e) => {
-    updateState('points', e.target.value);
-  };
-
-  const openIconsDialog = (e) => {
+  const openIconsDialog = () => {
     if (state.isEditable) {
-      updateState('isIconsDialogOpen', true);
+      dispatch({ type: 'toggleDialog', payload: true });
     }
   };
 
   const closeIconsDialog = (e) => {
-    updateState('iconIndex', e.currentTarget.id);
-    updateState('isIconsDialogOpen', false);
-  };
-
-  const handleDescChange = (e) => {
-    updateState('desc', e.target.value);
+    dispatch({
+      type: 'setIconIndex',
+      payload: parseInt(e.currentTarget.id, 10),
+    });
+    dispatch({ type: 'toggleDialog', payload: false });
   };
 
   const handleCount = (e, op) => {
-    if (op === 'add') {
-      updateState('count', state.count + 1);
-    } else {
-      updateState('count', state.count - 1);
-    }
+    const newCount = op === 'add' ? state.count + 1 : state.count - 1;
+    dispatch({ type: 'setCount', payload: newCount });
     props.updatePoints(op, state.points, e.target.value);
   };
 
@@ -68,17 +79,18 @@ function Task(props) {
         ))}
       </Dialog>
       <TaskIcon className="icon" onClick={openIconsDialog} />
-      <div type="text" className="desc">
+      <div className="desc">
         <input
           type="text"
           disabled={!state.isEditable}
-          onChange={handleDescChange}
+          onChange={(e) => setState('setDesc', e.target.value)}
           value={state.desc}
         />
         <br /> Points:{' '}
         <input
+          type="number"
           disabled={!state.isEditable}
-          onChange={handleSetPoints}
+          onChange={(e) => setState('setPoints', e.target.value)}
           value={state.points}
         />
       </div>
@@ -97,7 +109,7 @@ function Task(props) {
       <MuiIcons.Edit
         className="action-btn"
         style={state.isEditable ? { color: 'white' } : { color: 'black' }}
-        onClick={toggleEditable}
+        onClick={() => dispatch({ type: 'toggleEditable' })}
       />
     </div>
   );
