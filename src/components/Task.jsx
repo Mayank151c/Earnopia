@@ -1,10 +1,11 @@
-import React, { useEffect, useReducer } from 'react';
+import React from 'react';
+import axios from 'axios';
+import * as MuiIcons from '@mui/icons-material';
 import '../styles/Task.css';
 import Dialog from './Dialog';
 import Icons from '../assets/Icons';
-import * as MuiIcons from '@mui/icons-material';
+import API from '../config';
 
-// Reducer function
 const reducer = (state, action) => {
   switch (action.type) {
     case 'toggleEditable':
@@ -24,28 +25,20 @@ const reducer = (state, action) => {
   }
 };
 
-// Lazy initialization function
-const init = (props) => {
-  const savedState = localStorage.getItem(`task${props.id}`);
-  return savedState
-    ? JSON.parse(savedState)
-    : {
-        desc: props.data.desc,
-        count: props.data.count,
-        points: props.data.points,
-        isIconsDialogOpen: false,
-        isEditable: false,
-        iconIndex: 0,
-      };
-};
+const init = (props) => ({
+    id: props.data._id,
+    desc: props.data.desc,
+    count: props.data.count,
+    points: props.data.points,
+    iconIndex: props.data.iconIndex,
+    isIconsDialogOpen: false,
+    isEditable: false,
+});
 
 function Task(props) {
-  const [state, dispatch] = useReducer(reducer, props, init);
+  const [state, dispatch] = React.useReducer(reducer, props, init);
   const TaskIcon = Icons[state.iconIndex] || Icons[0];
-
-  useEffect(() => {
-    localStorage.setItem(`task${props.id}`, JSON.stringify(state));
-  }, [props.id, state]);
+  const EditSaveIcon = state.isEditable ? MuiIcons.Save : MuiIcons.Edit;
 
   const setState = (type, payload) => {
     dispatch({ type, payload });
@@ -65,11 +58,30 @@ function Task(props) {
     dispatch({ type: 'toggleDialog', payload: false });
   };
 
-  const handleCount = (e, op) => {
-    const newCount = op === 'add' ? state.count + 1 : state.count - 1;
-    dispatch({ type: 'setCount', payload: newCount });
-    props.updatePoints(op, state.points, e.target.value);
+  const handleCount = (e, value) => {
+    const newCount = state.count + value;
+    const data = {
+        desc: state.desc,
+        points: state.points*value,
+    }
+    axios.post(API.BASE_URL(`/events`), data).then(() => {
+        dispatch({ type: 'setCount', payload: newCount });
+        props.updatePoints(value, state.points, e.target.value);
+    });
   };
+
+  const handleEditSave = async (e) => {
+    if(state.isEditable) {
+      const data = {
+        desc: state.desc,
+        count: state.count,
+        points: state.points,
+        iconIndex: state.iconIndex
+      }
+      await axios.put(API.BASE_URL(`/tasks/${state.id}`), data);
+    }
+    dispatch({ type: 'toggleEditable' });
+  }
 
   return (
     <div id="task" className={state.isEditable ? 'editable' : ''}>
@@ -86,7 +98,7 @@ function Task(props) {
           onChange={(e) => setState('setDesc', e.target.value)}
           value={state.desc}
         />
-        <br /> Points:{' '}
+        <br /> {'Points: '}
         <input
           type="number"
           disabled={!state.isEditable}
@@ -97,19 +109,19 @@ function Task(props) {
       <div id="count">{state.count}</div>
       <MuiIcons.Add
         className="action-btn"
-        onClick={(e) => handleCount(e, 'add')}
+        onClick={(e) => handleCount(e, 1)}
       />
       <MuiIcons.Remove
         className="action-btn"
         style={{ color: 'darkred' }}
         onClick={(e) => {
-          if (state.count) handleCount(e, 'remove');
+          if (state.count) handleCount(e, -1);
         }}
       />
-      <MuiIcons.Edit
+      <EditSaveIcon
         className="action-btn"
-        style={state.isEditable ? { color: 'white' } : { color: 'black' }}
-        onClick={() => dispatch({ type: 'toggleEditable' })}
+        style={{ color: 'black' }}
+        onClick={(e) => handleEditSave(e)}
       />
     </div>
   );

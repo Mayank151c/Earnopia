@@ -1,27 +1,22 @@
 import React from 'react';
+import axios from 'axios';
+import Button from '@mui/material/Button';
 import './App.css';
 import Task from './components/Task';
 import UpdateLocalStorage from './components/UpdateLocalStorage';
-import Button from '@mui/material/Button';
 import Header from './components/Header';
-
-const totalTasks = [
-  { count: 0, desc: 'Excerise', points: 500 },
-  { count: 0, desc: 'Morning Walk', points: 250 },
-  { count: 0, desc: 'Leetcode QOTD', points: 1000 },
-  { count: 0, desc: 'Leetcode High', points: 1000 },
-  { count: 0, desc: 'Walk 5000 Steps', points: 250 },
-  { count: 0, desc: 'Drink a Glass of Water', points: 20 },
-  { count: 0, desc: 'Add a task', points: 100 },
-  { count: 0, desc: 'Add a task', points: 100 },
-  { count: 0, desc: 'Add a task', points: 100 },
-  { count: 0, desc: 'Add a task', points: 100 },
-  { count: 0, desc: 'Add a task', points: 100 },
-];
+import API from './config';
 
 function App() {
   const [coin, setCoin] = React.useState(0);
   const [updateLS, setUpdateLS] = React.useState(false);
+  const [totalTasks, setTotalTasks] = React.useState([]);
+
+  React.useEffect(() => {
+    axios.get(API.BASE_URL('/tasks')).then((tasks) => {
+      setTotalTasks(tasks.data);
+    });
+  }, []);
 
   // store in localstorage
   React.useEffect(() => {
@@ -38,13 +33,27 @@ function App() {
     localStorage.setItem('coin', Number(points));
   };
 
-  const updatePoints = (op, points, count) => {
-    if (op === 'add') {
+  const updatePoints = (value, points, count) => {
+    if (value === 1) {
       updateCoin(coin + Number(points));
     } else {
       if (count === 0) return;
       updateCoin(coin - Number(points));
     }
+  };
+
+  const handleCreateTask = () => {
+    const data = {
+        count: 0,
+        points: 100,
+        iconIndex: 0,
+        desc: 'Add a description'
+    }
+    axios.post(API.BASE_URL(`/tasks`), data).then(() => {
+      axios.get(API.BASE_URL(`/tasks`)).then((tasks) => {
+        setTotalTasks(tasks.data);
+      });
+    })
   };
 
   return (
@@ -53,14 +62,17 @@ function App() {
 
       <div id="body">
         <div>Total Tasks</div>
-        {totalTasks.map((data, i) => (
-          <Task key={i} id={i} updatePoints={updatePoints} data={data} />
+        {totalTasks.map((data) => (
+          <Task key={data._id} updatePoints={updatePoints} data={data} />
         ))}
+
+        <Button variant="contained" onClick={() => handleCreateTask()}> Create Task </Button>
+
+        <Button variant="contained" onClick={() => setUpdateLS(!updateLS)}>
+          {updateLS ? 'Hide' : 'Show'} Local Storage
+        </Button>
       </div>
-      <Button variant="contained" onClick={() => setUpdateLS(!updateLS)}>
-        {updateLS ? 'Hide' : 'Show'} Local Storage
-      </Button>
-      {updateLS && <UpdateLocalStorage />}
+      { updateLS && <UpdateLocalStorage /> }
     </div>
   );
 }
