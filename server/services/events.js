@@ -1,10 +1,11 @@
+const { ObjectId } = require('mongodb');
 const { connectToEventDb } = require('./database');
 
-const getAll = async () => {
+const getAll = async (username) => {
   try {
     const database = await connectToEventDb();
     const collection = database.collection('events');
-    const events = await collection.find({}).toArray();
+    const events = await collection.find({ username }).toArray();
     return events;
   } catch (err) {
     console.error('Error fetching events:', err);
@@ -27,7 +28,7 @@ const remove = async (eventId) => {
   try {
     const database = await connectToEventDb();
     const collection = database.collection('events');
-    const result = await collection.deleteOne({ _id: eventId });
+    const result = await collection.deleteOne({ _id: new ObjectId(eventId) });
     if (result.deletedCount === 1) {
       return {
         success: true,

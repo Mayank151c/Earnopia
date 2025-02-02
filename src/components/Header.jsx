@@ -10,7 +10,7 @@ function Header(props) {
       <div className="title">Earnopia</div>
       <div className="balance">
         <CurrencyBitcoinOutlined />
-        {String(props.coin).padStart(10, '0')}
+        {String(props.amount).padStart(10, '0')}
       </div>
     </div>
   );

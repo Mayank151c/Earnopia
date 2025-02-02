@@ -18,8 +18,6 @@ const reducer = (state, action) => {
       return { ...state, iconIndex: action.payload };
     case 'toggleDialog':
       return { ...state, isIconsDialogOpen: action.payload };
-    case 'setCount':
-      return { ...state, count: action.payload };
     default:
       return state;
   }
@@ -28,7 +26,6 @@ const reducer = (state, action) => {
 const init = (props) => ({
     id: props.data._id,
     desc: props.data.desc,
-    count: props.data.count,
     points: props.data.points,
     iconIndex: props.data.iconIndex,
     isIconsDialogOpen: false,
@@ -58,15 +55,13 @@ function Task(props) {
     dispatch({ type: 'toggleDialog', payload: false });
   };
 
-  const handleCount = (e, value) => {
-    const newCount = state.count + value;
+  const updatePoints = (e, value) => {
     const data = {
         desc: state.desc,
-        points: state.points*value,
+        points: state.points*value
     }
-    axios.post(API.BASE_URL(`/events`), data).then(() => {
-        dispatch({ type: 'setCount', payload: newCount });
-        props.updatePoints(value, state.points, e.target.value);
+    axios.post(API.BASE_URL(`/events`), data, { withCredentials: true }).then(() => {
+        props.updatePointsToAmount(value, state.points, e.target.value);
     });
   };
 
@@ -74,11 +69,10 @@ function Task(props) {
     if(state.isEditable) {
       const data = {
         desc: state.desc,
-        count: state.count,
         points: state.points,
         iconIndex: state.iconIndex
       }
-      await axios.put(API.BASE_URL(`/tasks/${state.id}`), data);
+      await axios.put(API.BASE_URL(`/tasks/${state.id}`), data, { withCredentials: true });
     }
     dispatch({ type: 'toggleEditable' });
   }
@@ -106,18 +100,31 @@ function Task(props) {
           value={state.points}
         />
       </div>
-      <div id="count">{state.count}</div>
-      <MuiIcons.Add
-        className="action-btn"
-        onClick={(e) => handleCount(e, 1)}
-      />
-      <MuiIcons.Remove
-        className="action-btn"
-        style={{ color: 'darkred' }}
-        onClick={(e) => {
-          if (state.count) handleCount(e, -1);
-        }}
-      />
+
+      { // Show action buttons if not editable
+        !state.isEditable && <>
+          <MuiIcons.Add
+            className="action-btn"
+            onClick={(e) => updatePoints(e, 1)}
+          />
+          <MuiIcons.Remove
+            className="action-btn"
+            style={{ color: 'darkred' }}
+            onClick={(e) => updatePoints(e, -1)}
+          />
+        </>
+      }
+
+      { // Show delete if editable
+        state.isEditable && <>
+          <MuiIcons.Delete
+            className="action-btn"
+            style={{ color: 'darkred' }}
+            onClick={() => props.deleteTask(state.id)}
+          />
+        </>
+      }
+
       <EditSaveIcon
         className="action-btn"
         style={{ color: 'black' }}

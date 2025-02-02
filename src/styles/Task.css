@@ -38,17 +38,6 @@
   }
 }
 
-#count {
-  font-size: 1.2rem;
-  height: 2rem;
-  width: 4rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 1rem;
-  border: 1px dashed rgba(0, 0, 0, 0.25);
-}
-
 .editable {
   background: rgb(136, 43, 11, 0.25);
   border: 2px solid red;
