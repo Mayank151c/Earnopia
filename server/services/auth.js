@@ -1,5 +1,5 @@
 const { connectToEventDb } = require('./database');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongodb');
 const SECRET_KEY = "secret_key";
