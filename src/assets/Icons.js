@@ -13,6 +13,9 @@ const Icons = [
   MuiIcons.Shower,
   MuiIcons.HotelOutlined,
   MuiIcons.ExploreOutlined,
+  MuiIcons.Apartment,
+  MuiIcons.ShoppingCart,
+  MuiIcons.YardOutlined,
 ];
 
 export default Icons;
