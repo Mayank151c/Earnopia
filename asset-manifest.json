@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/Earnopia/static/css/main.ea2502bb.css",
-    "main.js": "/Earnopia/static/js/main.c3a30cc9.js",
+    "main.js": "/Earnopia/static/js/main.2a760a1f.js",
     "static/media/favicon.ico": "/Earnopia/static/media/favicon.cc9de81f8a41d60f08cf.ico",
     "service-worker.js": "/Earnopia/service-worker.js",
     "index.html": "/Earnopia/index.html",
     "main.ea2502bb.css.map": "/Earnopia/static/css/main.ea2502bb.css.map",
-    "main.c3a30cc9.js.map": "/Earnopia/static/js/main.c3a30cc9.js.map"
+    "main.2a760a1f.js.map": "/Earnopia/static/js/main.2a760a1f.js.map"
   },
   "entrypoints": [
     "static/css/main.ea2502bb.css",
-    "static/js/main.c3a30cc9.js"
+    "static/js/main.2a760a1f.js"
   ]
 }
