@@ -31,11 +31,10 @@ function Home() {
     });
   };
 
-  const updatePointsToAmount = (value, points, count) => {
+  const updatePointsToAmount = (value, points) => {
     if (value === 1) {
       updateAmount(amount + Number(points));
     } else {
-      if (count === 0) return;
       updateAmount(amount - Number(points));
     }
   };
@@ -75,12 +74,11 @@ function Home() {
             {totalTasks.map((data) => (
             <Task key={data._id} updatePointsToAmount={updatePointsToAmount} deleteTask={deleteTask} data={data} />
             ))}
-
             <Button variant="contained" onClick={() => handleCreateTask()}> Create Task </Button>
         </div>
       }
       { nav===1 && 
-        <EventList /> 
+        <EventList updatePointsToAmount={updatePointsToAmount} /> 
       }
     </div>
   );

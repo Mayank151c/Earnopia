@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import * as MuiIcons from '@mui/icons-material';
+import { Button } from '@mui/material';
 import '../styles/Task.css';
 import Dialog from './Dialog';
 import Icons from '../assets/Icons';
@@ -77,8 +78,16 @@ function Task(props) {
     dispatch({ type: 'toggleEditable' });
   }
 
+  const btnStyle = { 
+    background: '#04AA6D', 
+    minWidth: '0rem',
+    padding: '.5rem .85rem',
+    margin: '.1rem',
+    color: 'white'
+  }
+
   return (
-    <div id="task" className={state.isEditable ? 'editable' : ''}>
+    <div id="task">
       <Dialog title="Select Icon" open={state.isIconsDialogOpen}>
         {Icons.slice(1).map((Icon, i) => (
           <Icon key={i} id={i + 1} onClick={closeIconsDialog} />
@@ -102,34 +111,25 @@ function Task(props) {
       </div>
 
       { // Show action buttons if not editable
-        !state.isEditable && <>
-          <MuiIcons.Add
-            className="action-btn"
-            onClick={(e) => updatePoints(e, 1)}
-          />
-          <MuiIcons.Remove
-            className="action-btn"
-            style={{ color: 'darkred' }}
-            onClick={(e) => updatePoints(e, -1)}
-          />
+        !state.isEditable ?
+        <>
+          <Button variant='outlined' style={btnStyle}>
+            <MuiIcons.Add onClick={(e) => updatePoints(e, 1)}/>
+          </Button>
+          <Button variant='outlined' style={{ ...btnStyle, background: '#f44336' }}>
+            <MuiIcons.Remove onClick={(e) => updatePoints(e, -1)}/>
+          </Button>
+        </> : <>
+          <Button disabled variant='contained' style={{ ...btnStyle, background: '#0000' }}></Button>
+          <Button variant='outlined' style={{ ...btnStyle, background: '#f44336' }}>
+            <MuiIcons.Delete onClick={() => props.deleteTask(state.id)}/>
+          </Button>
         </>
       }
 
-      { // Show delete if editable
-        state.isEditable && <>
-          <MuiIcons.Delete
-            className="action-btn"
-            style={{ color: 'darkred' }}
-            onClick={() => props.deleteTask(state.id)}
-          />
-        </>
-      }
-
-      <EditSaveIcon
-        className="action-btn"
-        style={{ color: 'black' }}
-        onClick={(e) => handleEditSave(e)}
-      />
+      <Button variant='outlined' style={state.isEditable ? btnStyle : { ...btnStyle, background: '#555555' }}>
+        <EditSaveIcon onClick={(e) => handleEditSave(e)} />
+      </Button>
     </div>
   );
 }

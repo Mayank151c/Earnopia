@@ -5,7 +5,7 @@
   gap: 0.3rem;
   padding: 0.2rem;
   border-radius: 0.5rem;
-  background-color: rgb(136, 43, 11, 0.5);
+  background-color: rgba(184, 190, 193, 0.5);
   .desc {
     background: unset;
     border: unset;
@@ -36,18 +36,4 @@
     border-radius: 0.5rem;
     background: rgba(255, 255, 255, 0.2);
   }
-}
-
-.editable {
-  background: rgb(136, 43, 11, 0.25);
-  border: 2px solid red;
-  border-bottom: 2px solid red;
-}
-
-.action-btn {
-  color: green;
-  cursor: pointer;
-  padding: 0.35rem;
-  border: 1px solid black;
-  border-radius: 30% 0% 30% 0;
 }
