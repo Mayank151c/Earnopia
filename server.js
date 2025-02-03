@@ -8,15 +8,32 @@ const authService = require('./server/services/auth');
 const app = express();
 const port = 3001;
 
-app.use(cors({ credentials: true, origin: process.env.ORIGIN }));
+const allowedOrigins = "http://localhost:3000,https://mayank151c.github.io";
+
+app.use(cors({
+  credentials: true,
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);  // Allow the request
+    } else {
+      callback(new Error("Not allowed by CORS")); // Block the request
+    }
+  }
+}));
 app.use(express.json());
 app.use(cookieParser());
 app.use((req, res, next) => {
-    const start = Date.now();
-    res.on('finish', () => {
+    if(process.env.DEBUG) {
+      const start = Date.now();
+      const originalResJson = res.json;
+      res.json = (data) => {
         const duration = Date.now() - start;
-        console.log(`\n${req.method} : ${req.url}\nResponse Time: ${duration}ms`);
-    });
+        console.log('\n_______________________')
+        console.log('\nResponse Body:', JSON.stringify(data, null, 2));
+        console.log(`\n${req.method} : ${req.originalUrl} (${duration}ms)`);
+        return originalResJson.call(res, data);
+      }
+    }
     next();
 })
 
@@ -35,7 +52,23 @@ app.post('/api/signup', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   try {
     const result = await authService.signIn(req.body);
-    res.cookie('token', result.token, { httpOnly: true, secure: false, maxAge: 3600000 });
+    res.cookie("token", result.token, { 
+      // 'httpOnly': This ensures, cookie is only accessible via HTTP(S) requests 
+      // and not through JavaScript (helps mitigate XSS attacks).
+      httpOnly: true, 
+      
+      // 'secure': This ensures, cookie is only sent over HTTPS, which helps protect
+      // the cookie during transmission (important for preventing MITM attacks).
+      secure: true,
+      
+      // 'sameSite': "None" is required when sending cookies cross-origin (from frontend 
+      // to backend on different domains). Without this, cookies may be blocked by modern browsers.
+      sameSite: "None", 
+    
+      // 'maxAge': This sets the expiration time for the cookie in milliseconds. 
+      // In this case, the token will expire in 1 hour (3600000ms).
+      maxAge: 3600000
+    });
     res.status(200).json(result.message);
   } catch (err) {
     res.status(401).json({ error: err.message });
